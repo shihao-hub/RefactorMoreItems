@@ -1,10 +1,13 @@
 require("debug")
 
+local g = require("rmis_global")
 local class = require("rmis_middleclass")
 
 local StringBuilder = class("StringBuilder") -- Java 的 StringBuilder
 
 function StringBuilder:initialize(capacity_or_str)
+    g.not_implemented_error()
+
     self.count = 0
     self.data = {}
     if type(capacity_or_str) == "number" then
