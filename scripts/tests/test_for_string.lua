@@ -1,3 +1,4 @@
+local g = require("rmis_global")
 local str = require("rmis_string")
 
 local writer = function(...)
@@ -18,6 +19,6 @@ end
 --test_for_format()
 
 local function test_for_f()
-    print(str.f("|{{{name}}} {value}|", { name = "--name--", value = "--value--", }))
+    print(g.f("|{{{name}}} {value}|", { name = "--name--", value = "--value--", }))
 end
 test_for_f()
