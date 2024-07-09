@@ -7,19 +7,13 @@ local str = setmetatable({}, {
     end
 })
 
+--- 类似 string.format，但是传入的所有参数都会调用 tostring
 function str.format(formatstring, ...)
     return string.format(formatstring, unpack(g.map(tostring, { ... })))
 end
 
----试图模仿 python 的 f
-function str.f(formatstring, data)
-    return (string.gsub(formatstring, "{{ *([()A-Za-z0-9_]+) *}}", function(v)
-        -- 捕获到的内容是这个 v
-        if not data[v] then
-            error("str.f 格式存在问题", 4)
-        end
-        return string.format("%q", tostring(data[v]))
-    end))
+if debug.getinfo(3) == nil then
+
 end
 
 return str
