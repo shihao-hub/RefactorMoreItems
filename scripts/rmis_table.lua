@@ -1,5 +1,4 @@
 local g = require("rmis_global")
-local str = require("rmis_string")
 local tab = setmetatable({
     keys = g.keys, values = g.values
 }, { __index = table })
@@ -15,7 +14,7 @@ function tab.serialize(t, cycle, indent)
         g.not_implemented_error()
     end
     if g.contain({ "number", "string", "boolean", "nil" }, type(t)) then
-        io.write(str.format("%q", t))
+        io.write(string.format("%q", tostring(t)))
     elseif type(t) == "table" then
         io.write("{\n")
         for k, v in pairs(t) do
@@ -31,7 +30,7 @@ function tab.serialize(t, cycle, indent)
             io.write(string.rep(" ", 4 * (indent - 1)), "},\n")
         end
     else
-        error(b.f("出现不适配的类型：{{ type(t) }}", { ["type(t)"] = type(t) }))
+        error(g.f("出现不适配的类型：{{ type(t) }}", { ["type(t)"] = type(t) }))
     end
 
 
