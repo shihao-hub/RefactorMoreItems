@@ -1,8 +1,9 @@
 local g = require("rmis_global")
 local class = require("rmis_middleclass")
+local Object = require("rmis_class_object")
 
----@class Vector
-local Vector = class("Vector")
+---@class Vector : Object
+local Vector = class("Vector", Object)
 
 function Vector:_move_elements()
 
