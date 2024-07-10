@@ -11,6 +11,11 @@ function g.pairs_by_keys(t, cmp)
     end
 end
 
+function g.print_and_flush(...)
+    print(...)
+    io.flush()
+end
+
 if debug.getinfo(3) == nil then
     --for i in b.range(10, 0, -1) do
     --    print(i)
