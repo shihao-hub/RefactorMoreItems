@@ -1,5 +1,6 @@
 local g = require("rmis_global")
 local str = require("rmis_string")
+
 local Vector = require("_rmis_class_vector_local")
 
 --local DEFAULT_CAPACITY = 3 -- Lua 表会自动扩容，所以不需要这个默认容量
@@ -214,6 +215,7 @@ if debug.getinfo(3) == nil then
     print(vec)
     vec:uniquify()
     print(vec)
+    print(vec:tostring())
 
     --print(vec:remove(8))
     --print(vec)
