@@ -12,6 +12,10 @@ function str.format(formatstring, ...)
     return string.format(formatstring, unpack(g.map(tostring, { ... })))
 end
 
+function str.replace(s, replaced, repl, count)
+    return string.gsub(s, replaced, repl, count)
+end
+
 if debug.getinfo(3) == nil then
 
 end

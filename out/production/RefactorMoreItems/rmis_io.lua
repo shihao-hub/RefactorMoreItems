@@ -8,13 +8,12 @@ end
 
 --- 会保留换行符
 function iot.lines(filepath)
-    local file, msg = io.open(filepath, "r")
+    local file = io.open(filepath, "r")
     if not file then
-        error(g.f("{{msg}}（没有这个文件或目录）", { msg = msg }), 2)
+        error(g.f("文件 `{{path}}` 不存在", { path = filepath }), 2)
     end
     return function()
-        -- 注意 emmylua 好像有错误，果然应该多看文档。错误何在？Lua 5.2 以上才提供 a,l,L 吧...
-        local res = file:read("*line") .. "\n"
+        local res = file:read("*line").."\n"
         if not res then
             file:close()
         end
@@ -23,7 +22,7 @@ function iot.lines(filepath)
 end
 
 if debug.getinfo(3) == nil then
-    for line in iot.lines("tests/test1.lua") do
+    for line in iot.lines("tests/test.lua") do
         print(line)
     end
 
