@@ -1,9 +1,6 @@
-require("debug")
-
 local g = require("rmis_global")
-local class = require("rmis_middleclass")
 
-local StringBuilder = class("StringBuilder") -- Java 的 StringBuilder
+local StringBuilder = require("_rmis_class_stringbuilder_local")
 
 function StringBuilder:initialize(capacity_or_str)
     g.not_implemented_error()
@@ -39,6 +36,7 @@ if debug.getinfo(3) == nil then
     local sb = StringBuilder("abc")
     print(sb)
     sb:append("abc")
+    print(sb)
     print(sb)
 end
 
