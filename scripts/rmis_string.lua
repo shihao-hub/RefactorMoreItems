@@ -16,6 +16,10 @@ function str.replace(s, replaced, repl, count)
     return string.gsub(s, replaced, repl, count)
 end
 
+function str.strip(s)
+    return string.gsub(s, "^ *(.-) *$", "%1")
+end
+
 if debug.getinfo(3) == nil then
 
 end
