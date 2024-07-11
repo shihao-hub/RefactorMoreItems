@@ -138,8 +138,9 @@ function List:traverse(fn)
 end
 
 function List:__tostring()
-    return self:__tostring("[","]")
+    return self:_tostring("[","]")
 end
+
 
 if debug.getinfo(3) == nil then
     local list = List()
