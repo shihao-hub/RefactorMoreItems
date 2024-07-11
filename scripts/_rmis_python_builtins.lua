@@ -59,7 +59,7 @@ end
 
 --- python range
 --- 但有些区别，Python 是 [)，由于 Lua 从 1 开始，所以 Lua 用 [] 比较好？
---- 还是需要考虑考虑的
+--- 还是需要考虑考虑的。目前和 python 统一吧。（这里我突然意识到，为什么说 Lua 从 1 开始反程序员了）
 function pb.range(start, stop, step)
     if start and not stop then
         stop = start
@@ -82,14 +82,10 @@ end
 
 --- 试图模仿 python 的 f
 function pb.f(formatstring, data)
-    local function string_strip(v)
-        return string.gsub(v, "^ *(.-) *$", "%1")
-    end
-
     return (string.gsub(formatstring, "{{ *([A-Za-z0-9_]*) *}}", function(v)
         -- 捕获到的内容是这个 v，需要注意到是，没匹配到不会进入这个函数。所以要注意...
         if not data[v] then
-            error("data 中不存在 " .. v .. " 这个键", 4)
+            error("data 中不存在 " .. v .. " 这个键或者键值为空", 4)
         end
         return string.format("%s", tostring(data[v]))
     end))
