@@ -197,10 +197,22 @@ end
 --- 遍历元素并统一处理所有元素，处理方法由函数对象指定
 --- 这个处理方法必须要有返回值，传入的元素经过处理再返回回来
 function Vector:traverse(fn)
+    g.not_implemented_error()
+    print("WARNING: 当前调用的函数会修改元素本身，请注意")
+    -- 这里不能复用 __iter__，因为这里既读又写
+    -- FIXME: 这个函数有用吗，暂且搁置
     local i = 0
     return function()
         i = i + 1
         self.data[i] = fn(self.data[i])
+        return self.data[i]
+    end
+end
+
+function Vector:__iter__()
+    local i = 0
+    return function()
+        i = i + 1
         return self.data[i]
     end
 end
@@ -228,9 +240,12 @@ if debug.getinfo(3) == nil then
     --vec:put(10, 6)
     vec:insert(1):insert(2):insert(3):insert(3):insert(3):insert(4):insert(5):insert(6):insert(7):insert(8):insert(9):insert(9):insert(9):insert(10)
     print(vec)
-    print(vec:size())
-    vec:remove_range(1, 16)
-    print(vec)
+    for e in g.iter(vec) do
+        print(e)
+    end
+    --print(vec:size())
+    --vec:remove_range(1, 16)
+    --print(vec)
     --vec:uniquify()
     --print(vec)
 
