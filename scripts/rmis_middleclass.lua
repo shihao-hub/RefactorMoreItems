@@ -82,6 +82,7 @@ local function _createClass(name, super)
     local dict = {}
     dict.__index = dict
 
+    -- 调用 class("") 返回的就是这个 aClass
     local aClass = { name = name, super = super, static = {},
                      __instanceDict = dict, __declaredMethods = {},
                      subclasses = setmetatable({}, {__mode='k'})  }
@@ -121,6 +122,7 @@ local function _includeMixin(aClass, mixin)
     return aClass
 end
 
+-- 在表中定义函数的时候，第一个参数必须是 self，和 Python 好相似呀...
 local DefaultMixin = {
     __tostring   = function(self) return "instance of " .. tostring(self.class) end,
 
@@ -136,11 +138,12 @@ local DefaultMixin = {
     end,
 
     static = {
+        -- 这个返回的是 object
         allocate = function(self)
             assert(type(self) == 'table', "Make sure that you are using 'Class:allocate' instead of 'Class.allocate'")
             return setmetatable({ class = self }, self.__instanceDict)
         end,
-
+        -- 这里传入的 self 是 class，所以 obj.class 是该实例的类
         new = function(self, ...)
             assert(type(self) == 'table', "Make sure that you are using 'Class:new' instead of 'Class.new'")
             local instance = self:allocate()
