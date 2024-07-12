@@ -20,6 +20,10 @@ function b.not_implemented_error()
     error("未实现错误", 2)
 end
 
+function b.subclass_responsibility_error()
+    error("子类未履行职责错误", 2)
+end
+
 if debug.getinfo(3) == nil then
     -- 此处验证了一下 table.maxn 确实可以找完整
     local t = { 1, 2, 3, nil, 4, 5, nil, nil, nil, nil, 100 }
