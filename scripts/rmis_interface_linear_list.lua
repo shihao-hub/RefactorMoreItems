@@ -30,23 +30,23 @@ function LinearList:initialize()
 end
 
 function LinearList:size()
-    g.not_implemented_error()
+    g.subclass_responsibility_error()
 end
 
 --- 删除序号为 r 的元素，返回该元素中原存放的对象
 ---@param r number
 function LinearList:remove(r)
-    g.not_implemented_error()
+    g.subclass_responsibility_error()
 end
 
 function LinearList:disordered()
-    g.not_implemented_error()
+    g.subclass_responsibility_error()
 end
 
 --- 查找等于 e 且秩最大的元素，[lo, hi)
 ---@overload fun(e:any):boolean
 function LinearList:find(e, lo, hi)
-    g.not_implemented_error()
+    g.subclass_responsibility_error()
 end
 
 return LinearList
