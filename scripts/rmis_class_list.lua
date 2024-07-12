@@ -83,7 +83,18 @@ function List:remove(p)
 end
 
 function List:disordered()
-
+    local pre
+    for e in g.iter(self) do
+        if not pre then
+            pre = e
+        else
+            if pre.data > e.data then
+                return true
+            end
+            pre = e
+        end
+    end
+    return false
 end
 
 function List:sort(p, n)
@@ -126,21 +137,33 @@ function List:uniquify()
 end
 
 function List:traverse(fn)
+    g.not_implemented_error()
+    print("WARNING: 当前调用的函数会修改元素本身，请注意")
+    local generator = g.iter(self)
+    return function()
+        local cur = generator()
+        if not cur then
+            return nil
+        end
+        cur.data = fn(cur.data)
+        return cur.data
+    end
+end
+
+function List:__iter__()
     local p = self.header
     return function()
         p = p.succ
         if p == self.trailer then
             return nil
         end
-        p.data = fn(p.data)
-        return p.data
+        return p
     end
 end
 
 function List:__tostring()
-    return self:_tostring("[","]")
+    return self:_tostring("[", "]")
 end
-
 
 if debug.getinfo(3) == nil then
     local list = List()
@@ -151,10 +174,15 @@ if debug.getinfo(3) == nil then
     list:insert_as_last(3)
     list:insert_as_last(4)
     print(list)
-    for e in list:traverse(tostring) do
-        print(e)
-    end
-    print(list)
+    print(list:disordered())
+    list:insert_as_last(3)
+    print(list:disordered())
+    --for e in g.iter(require("rmis_class_vector")()) do
+    --    print("--", e)
+    --end
+    --for e in list:traverse(tostring) do
+    --    print(type(e), e)
+    --end
 end
 
 return List
