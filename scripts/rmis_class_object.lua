@@ -1,14 +1,13 @@
 local g = require("rmis_global")
 local Object = require("_rmis_class_object_local")
 
---- 测试继承用的，不需要这个
 function Object:tostring()
     return tostring(self)
 end
 
 
 function Object:get_class()
-    return tostring(self)
+    return "class " .. self.class.name
 end
 
 --- 默认是比较地址，所以需要重写
