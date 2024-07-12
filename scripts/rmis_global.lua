@@ -48,6 +48,18 @@ end
 --    return g.right_open(right)
 --end
 
+--- 2024-07-12：Python 的鸭子类型非常适合 Lua 呀，好舒服，Python 果然太棒了
+---@param iterable Vector|List
+function g.iter(iterable)
+    if not iterable.__iter__ then
+        error(lb.f("`{{iterable}}` 没有实现 __iter__ 方法，不可迭代", { iterable = iterable:get_class() }), 2)
+    end
+    local generator = iterable:__iter__()
+    return function()
+        return generator()
+    end
+end
+
 if debug.getinfo(3) == nil then
     --for i in b.range(10, 0, -1) do
     --    print(i)
