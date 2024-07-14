@@ -1,8 +1,8 @@
 local g = require("rmis_global")
 local class = require("rmis_middleclass")
-local Object = require("rmis_class_object")
+local BasicStringBuilder = require("_rmis_class_basic_stringbuilder_local")
 
----@class StringBuilder : Object
-local StringBuilder = class("StringBuilder", Object) -- Java 的 StringBuilder
+---@class StringBuilder : BasicStringBuilder
+local StringBuilder = class("StringBuilder", BasicStringBuilder) -- Java 的 StringBuilder
 
 return StringBuilder

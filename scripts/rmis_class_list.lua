@@ -97,7 +97,16 @@ function List:disordered()
     return false
 end
 
+--- 对起始与 p 的 n 个元素排序
+---@overload fun()
+---@param p ListNode
+---@param n number
 function List:sort(p, n)
+    if not p and not n then
+        p = self:first()
+        n = self:size()
+    end
+
     -- 随机选取排序算法，测试用。
     local rand = math.random(1, 3)
     local switch = {
@@ -114,15 +123,50 @@ function List:sort(p, n)
     return switch[rand]
 end
 
-function List:find()
-
+--- 节点 p 的 n 个真前驱中，找到等于 e 的最后者
+---@param e any
+---@param n number
+---@param p ListNode
+---@return ListNode|nil
+function List:find(e, n, p)
+    local cur = p
+    local res
+    -- 用区间的左开右闭类似的思想确定边界值很舒服
+    for _ in g.range(n, 0, -1) do
+        cur = cur.pred
+        if cur == self.header then
+            break
+        end
+        if cur.data == e then
+            res = cur
+        end
+    end
+    return res
 end
 
-function List:search()
+--- 在有序列表内节点 p 的 n 个真前驱中（所以不考虑 p 自己），找到不大于 e 的最后者
+---@param e any
+---@param n number
+---@param p ListNode
+---@return ListNode|nil
+function List:search(e, n, p)
     if self:disordered() then
         error("该函数只适用于有序链表")
     end
 
+    g.untested_error()
+
+    local cur = p
+    for _ in g.range(n, 0, -1) do
+        cur = cur.pred
+        if cur == self.header then
+            break
+        end
+        if cur.data <= e then
+            return cur -- 最后者是只从右往左第一个？
+        end
+    end
+    return nil
 end
 
 function List:deduplicate()
@@ -173,9 +217,15 @@ if debug.getinfo(3) == nil then
     list:insert_as_last(2)
     list:insert_as_last(3)
     list:insert_as_last(4)
+    list:search()
     print(list)
     print(list:disordered())
     list:insert_as_last(3)
+    list:insert_as_last(3)
+
+    print(list)
+    print(list:last().data)
+    print(list:find(3, 10, list:last()).data)
     print(list:disordered())
     --for e in g.iter(require("rmis_class_vector")()) do
     --    print("--", e)

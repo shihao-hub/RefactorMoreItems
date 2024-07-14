@@ -1,4 +1,5 @@
 local g = require("rmis_global")
+local str = require("rmis_string")
 local ListNode = require("_rmis_class_list_node_local")
 
 ListNode.static.__apis__ = {
@@ -31,6 +32,10 @@ function ListNode:insert_as_succ(data)
     self.succ.pred = node
     self.succ = node
     return node
+end
+
+function ListNode:tostring()
+    return str.format("<%s, %s, %s>", self.data, self.pred, self.succ)
 end
 
 return ListNode

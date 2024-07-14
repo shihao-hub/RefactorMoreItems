@@ -45,4 +45,8 @@ function Vector:_tostring(left_char, right_char)
 
 end
 
+function Vector:_insertion_sort(start_pos,end_pos)
+
+end
+
 return Vector

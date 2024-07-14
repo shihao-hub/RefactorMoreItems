@@ -12,16 +12,21 @@ function str.format(formatstring, ...)
     return string.format(formatstring, unpack(g.map(tostring, { ... })))
 end
 
-function str.replace(s, replaced, repl, count)
-    return string.gsub(s, replaced, repl, count)
-end
-
-function str.strip(s)
-    return string.gsub(s, "^ *(.-) *$", "%1")
+function str.iter(s)
+    local i = 0
+    return function()
+        i = i + 1
+        if i > #s then
+            return nil
+        end
+        return string.sub(s, i, i)
+    end
 end
 
 if debug.getinfo(3) == nil then
-
+    for e in str.iter("abc") do
+        print("--" .. e)
+    end
 end
 
 return str

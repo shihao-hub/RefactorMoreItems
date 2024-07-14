@@ -2,7 +2,7 @@ local g = require("rmis_global")
 local Object = require("_rmis_class_object_local")
 
 function Object:tostring()
-    return tostring(self)
+    g.subclass_responsibility_error()
 end
 
 

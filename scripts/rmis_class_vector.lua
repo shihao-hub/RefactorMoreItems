@@ -66,31 +66,63 @@ end
 
 --- 查找等于 e 且秩最大的元素，[lo, hi)
 ---@overload fun(e:any):boolean
+---@return number @ -1 代表没找到
 function Vector:find(e, lo, hi)
+    g.untested_error()
+
     lo = lo or 1
     hi = hi or self._size + 1
     for i in g.range(hi - 1, lo - 1, -1) do
         if self.data[i] == e then
-            return true
+            return i
         end
     end
-    return false
+    return -1
 end
 
-function Vector:search(e)
+--- 这是向量啊，可以用二分查找
+function Vector:search(e, lo, hi)
     if self:disordered() then
         error("该函数只适用于有序向量")
     end
 
-    g.not_implemented_error()
+    g.untested_error()
 
+    while lo < hi do
+        local mid = (lo + hi) / 2
+        if e < self.data[mid] then
+            hi = mid -- 注意，左闭右开，所以 hi = mid，而不是 mid - 1
+        elseif e > self.data[mid] then
+            lo = lo + 1
+        else
+            return mid
+        end
+    end
+    return -1
 
 end
 
-function Vector:sort()
-    g.not_implemented_error()
-
-    -- 非降序
+--- 非降序，[start_pos, end_pos)
+---@overload fun()
+function Vector:sort(start_pos, end_pos)
+    if not start_pos and not end_pos then
+        start_pos = 1
+        end_pos = g.right_open(self:size())
+    end
+    -- 随机选取排序算法，测试用。
+    local rand = math.random(1, 3)
+    local switch = {
+        [1] = function()
+            return self:_insertion_sort(start_pos, end_pos)
+        end,
+        [2] = function()
+            return self:_selection_sort(start_pos, end_pos)
+        end,
+        [3] = function()
+            return self:_merer_sort(start_pos, end_pos)
+        end
+    }
+    return switch[rand]
 end
 
 --- e 作为秩为 r 元素插入，原后继元素依次后移
@@ -125,7 +157,7 @@ end
 function Vector:remove_range(lo, hi)
     -- 只能删除 [1,len]，左闭右开，那么应该只能输入 [1,len+1)
     assert(lo < hi and lo >= 1 and hi <= g.right_open(self._size),
-            g.f("输入的区间 [{{lo}}, {{hi}}) 不是 [1, {{right}}) 的子集", { lo = lo, hi = hi, right = g.right_open(self._size)}))
+            g.f("输入的区间 [{{lo}}, {{hi}}) 不是 [1, {{right}}) 的子集", { lo = lo, hi = hi, right = g.right_open(self._size) }))
 
     -- 方法一
     --local interval_len = hi - lo + 1
@@ -243,6 +275,7 @@ if debug.getinfo(3) == nil then
     for e in g.iter(vec) do
         print(e)
     end
+    print(vec:find(3))
     --print(vec:size())
     --vec:remove_range(1, 16)
     --print(vec)

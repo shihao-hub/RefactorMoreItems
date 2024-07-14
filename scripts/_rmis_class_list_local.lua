@@ -5,14 +5,28 @@ local Object = require("rmis_class_object")
 ---@class List : Object
 local List = class("List", Object)
 
-function List:_insertion_sort(p, n)
 
+---@param p ListNode
+---@param n number
+function List:_insertion_sort(p, n)
+    for _ in g.range(1,g.right_open(n)) do
+
+        p = p.succ
+    end
 end
 
+---@param p ListNode
+---@param n number
 function List:_selection_sort(p, n)
 
 end
 
+function List:_merge()
+
+end
+
+---@param p ListNode
+---@param n number
 function List:_merer_sort(p, n)
 
 end

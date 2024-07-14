@@ -44,6 +44,14 @@ function g.right_open(right)
     return right + 1
 end
 
+---@param s string
+---@param prn Reference
+function g.evaluate(s, prn)
+    local Stack = require("rmis_class_stack") -- 避免循环引用
+    local stack_operand, stack_operator = Stack(), Stack()
+
+end
+
 --function g.ro(right)
 --    return g.right_open(right)
 --end
