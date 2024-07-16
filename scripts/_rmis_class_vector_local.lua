@@ -13,7 +13,7 @@ end
 function Vector:_check_non_nil_value(v, msg)
     msg = msg or g.f("不允许为空值")
     if v == nil then
-        error(msg, 2)
+        error(msg, 3)
     end
 end
 
@@ -22,14 +22,14 @@ end
 function Vector:_check_valid_rank_value(r, msg, left, right)
     if not msg and not left and not right then
         left = 1
-        right = self._size
+        right = self._size + 1
     elseif msg and left and not right then
         right = left
         left = msg
     end
     msg = g.f("秩超出范围了，合法范围为：[{{l}}, {{r}})", { l = left, r = right })
     if not (r >= left and r < right) then
-        error(msg, 2)
+        error(msg, 3)
     end
 end
 
@@ -45,7 +45,7 @@ function Vector:_tostring(left_char, right_char)
 
 end
 
-function Vector:_insertion_sort(start_pos,end_pos)
+function Vector:_insertion_sort(start_pos, end_pos)
 
 end
 
