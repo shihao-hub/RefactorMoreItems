@@ -7,26 +7,27 @@ local Vector = require("_rmis_class_vector_local")
 local SORTED_CATEGORY = { "ASC", "DES" }
 
 Vector.static.__apis__ = {
-    "size",
-    "empty",
-    "get",
-    "put",
-    "insert",
-    "remove",
-    "disordered",
-    "sort",
-    "find",
-    "search",
-    "deduplicate",
-    "uniquify",
+    "size", -- 元素总数
+    "empty", -- 是否为空
+
+    "get", -- 类比数组的 a[n]
+    "put", -- 类比数组的 a[n] = x
+    "insert", -- 在向量的指定秩处，插入元素，原来该位置及其之后的元素全部后移
+
+    "remove", -- 删除指定秩处的元素，该元素后面的元素全部前移
+    "sort", -- 非降序排序
+    "find", -- 视序列为乱序，查找指定元素
+    "disordered", -- 是否为乱序
+    "search", -- 视序列为非降序，查找目标元素，返回不大于目标元素且秩最大的节点（等价于逆序查找时第一个满足条件的元素）
+    "deduplicate", -- 视序列为乱序，剔除重复节点
+    "uniquify", -- 视序列为非降序，剔除重复节点
+
     "traverse"
 }
 
 ---@overload fun()
+---@overload fun(scale:number,init_val:any)
 function Vector:initialize(scale, init_val)
-    --Vector.super:initialize(scale, init_val)
-    --print(self)
-
     if scale then
         self:_check_non_nil_value(init_val)
     end
@@ -82,11 +83,11 @@ end
 
 --- 这是向量啊，可以用二分查找
 function Vector:search(e, lo, hi)
-    if self:disordered() then
-        error("该函数只适用于有序向量")
-    end
-
     g.untested_error()
+
+    if self:disordered() then
+        error("该函数只适用于有序向量", 2)
+    end
 
     while lo < hi do
         local mid = (lo + hi) / 2
@@ -105,6 +106,8 @@ end
 --- 非降序，[start_pos, end_pos)
 ---@overload fun()
 function Vector:sort(start_pos, end_pos)
+    g.not_implemented_error()
+
     if not start_pos and not end_pos then
         start_pos = 1
         end_pos = g.right_open(self:size())
@@ -128,24 +131,27 @@ end
 --- e 作为秩为 r 元素插入，原后继元素依次后移
 --- 如果 r 置空，则视为尾插法
 ---@overload fun(e:any):Vector
+---@param r number
+---@param val any
 ---@return Vector 返回值是自己，类似 StringBuilder 的 append，这样可以连续调用了
-function Vector:insert(r, e)
-    if r and not e then
-        e = r
+function Vector:insert(r, val)
+    if r and not val then
+        val = r
         r = self._size + 1
     end
 
-    self:_check_non_nil_value(e, "插入值不允许为 nil")
+    self:_check_non_nil_value(val, "插入值不允许为 nil")
     self:_check_valid_rank_value(r, nil, 1, g.right_open(self._size) + 1)
 
     for i in g.range(self._size + 1, r, -1) do
         self.data[i] = self.data[i - 1]
     end
-    self.data[r] = e
+    self.data[r] = val
     self._size = self._size + 1
     return self
 end
 
+--- TODO: 把 remove_range 整合进来
 function Vector:remove(r)
     local res = self.data[r]
     self:remove_range(r, r + 1)
@@ -191,7 +197,7 @@ end
 --- uniquify: 唯一的，就是去重
 function Vector:uniquify()
     if self:disordered() then
-        error("该函数只适用于有序向量")
+        error("该函数只适用于有序向量", 2)
     end
 
     -- 时间复杂度高达 O(n^2)
@@ -230,6 +236,7 @@ end
 --- 这个处理方法必须要有返回值，传入的元素经过处理再返回回来
 function Vector:traverse(fn)
     g.not_implemented_error()
+
     print("WARNING: 当前调用的函数会修改元素本身，请注意")
     -- 这里不能复用 __iter__，因为这里既读又写
     -- FIXME: 这个函数有用吗，暂且搁置
@@ -241,6 +248,7 @@ function Vector:traverse(fn)
     end
 end
 
+--- 正向迭代，显然还可以加个反向迭代
 function Vector:__iter__()
     local i = 0
     return function()
