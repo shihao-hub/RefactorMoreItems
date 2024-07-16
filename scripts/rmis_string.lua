@@ -9,7 +9,7 @@ local str = setmetatable({}, {
 
 --- 类似 string.format，但是传入的所有参数都会调用 tostring
 function str.format(formatstring, ...)
-    return string.format(formatstring, unpack(g.map(tostring, { ... })))
+    return string.format(formatstring, unpack(g.map(tostring, { n = select("#", ...), ... })))
 end
 
 function str.iter(s)
