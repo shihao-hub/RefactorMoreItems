@@ -1,56 +1,80 @@
-local pb = require("_rmis_python_builtins")
-local lb = pb
+local super = require("_rmis_python_builtins")
+local this = super -- 有 Lua 的风格的函数放在这个文件中，虽然目前没感觉到 Lua 风格代码是啥
 
-function lb.keys(t)
+
+--- 合并列表，默认会剔除列表中的空值
+function this.merge(...)
+    local args = { ... }
     local res = {}
-    for k, _ in pairs(t) do
-        table.insert(res, k)
-    end
-    return res
-end
-
-function lb.values(t)
-    local res = {}
-    for _, v in pairs(t) do
-        table.insert(res, v)
-    end
-    return res
-end
-
-function lb.contain(t, val)
-    for _, v in pairs(t) do
-        if val == v then
-            return true
+    for i in super.range(1, select("#", ...) + 1) do
+        for j in super.range(1, table.maxn(args[i]) + 1) do
+            -- 注意，args[i][j] == nil 时，不会插入！
+            table.insert(res, args[i][j])
         end
     end
-    return false
+    return res
 end
 
---- 此处比 lua 的 assert 多了一个 level 参数
----@overload fun(v:boolean)
----@overload fun(v:boolean,level:number)
----@param v boolean
----@param message string
----@param level number
-function lb.assert(v, message, level)
-    -- 注意，此处重载了三次函数，与其考虑 if else 的情况，不如直接三个分支，哪怕有重复代码...
-    if type(message) == "number" and not level then
-        level = message + 1
-        message = "assertion failed!"
-    else
-        message = message or "assertion failed!"
-        level = level and level + 1 or 2
+--- 并集
+function this.union(v1, v2)
+    local function set_add(set, t)
+        for i in super.range(super.right_open(table.maxn(t))) do
+            if t[i] then
+                set[t[i]] = true
+            end
+        end
     end
-    if not v then
-        error(message, level)
+
+    local set = {}
+    set_add(set, v1)
+    set_add(set, v2)
+    return super.keys(set)
+end
+
+--- 交集
+function this.intersection(v1, v2)
+    local map = {}
+    for i in super.range(super.right_open(table.maxn(v1))) do
+        if v1[i] then
+            map[v1[i]] = 1
+        end
     end
+    for i in super.range(super.right_open(table.maxn(v2))) do
+        if v2[i] then
+            map[v2[i]] = map[v2[i]] and map[v2[i]] + 1 or 1
+        end
+    end
+    return super.keys(map, function(k)
+        return map[k] > 1
+    end)
+end
+
+--- 差集：以 v1 为目标数据，去除 v1 和 v2 的共同数据
+function this.difference(v1, v2)
+    local map = {}
+    for i in super.range(super.right_open(table.maxn(v1))) do
+        if v1[i] then
+            map[v1[i]] = 1
+        end
+    end
+    for i in super.range(super.right_open(table.maxn(v2))) do
+        if v2[i] and map[v2[i]] then
+            map[v2[i]] = map[v2[i]] - 1
+        end
+    end
+    return super.keys(map, function(k)
+        return map[k] > 0
+    end)
 end
 
 if debug.getinfo(3) == nil then
-    print(lb.any({ 1, nil, 3 }))
-    print(lb.all({ 1, 3, 3, nil }))
-    lb.assert(false, 1)
-
+    --print(this.any({ 1, nil, 3 }))
+    --print(this.all({ 1, 3, 3, nil }))
+    ----this.assert(false, 1)
+    --print({ [nil] = 1 })
+    print(this.list_tostring(this.union({ 1, 2 }, { 1, 2, 3, 4 })))
+    print(this.list_tostring(this.intersection({ 1, 2, 4 }, { 1, 2, 3, 4 })))
+    print(this.list_tostring(this.difference({ 1, 2, 4, 5 }, { 1, 2, 3, 4 })))
 end
 
-return lb
+return this
