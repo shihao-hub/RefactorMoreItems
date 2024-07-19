@@ -25,6 +25,20 @@ Vector.static.__apis__ = {
     "traverse"
 }
 
+--- __add 可以实现操作符重载
+---@param v Vector
+function Vector:__add(v)
+    g.assert(type(v) == "table" and v.isInstanceOf and v:isInstanceOf(Vector), "不是同一类型无法相加", 2)
+    local res = Vector()
+    for e in g.iter(self) do
+        res:insert(e)
+    end
+    for e in g.iter(v) do
+        res:insert(e)
+    end
+    return res
+end
+
 ---@overload fun()
 ---@overload fun(scale:number,init_val:any)
 function Vector:initialize(scale, init_val)
@@ -279,11 +293,12 @@ if debug.getinfo(3) == nil then
     --vec:put(9, 5)
     --vec:put(10, 6)
     vec:insert(1):insert(2):insert(3):insert(3):insert(3):insert(4):insert(5):insert(6):insert(7):insert(8):insert(9):insert(9):insert(9):insert(10)
-    print(vec)
-    for e in g.iter(vec) do
-        print(e)
-    end
-    print(vec:find(3))
+    --print(vec)
+    --for e in g.iter(vec) do
+    --    print(e)
+    --end
+    --print(vec:find(3))
+    print(vec + 1)
     --print(vec:size())
     --vec:remove_range(1, 16)
     --print(vec)
