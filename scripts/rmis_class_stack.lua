@@ -2,7 +2,6 @@ local g = require("rmis_global")
 
 local Stack = require("_rmis_class_stack_local")
 
-
 Stack.static.__apis__ = {
     "size",
     "empty",
@@ -56,15 +55,15 @@ end
 
 function Stack:__tostring()
     local res = {}
-    table.insert(res, "]")
+    table.insert(res, "] ")
     for i in g.range(self:size(), 0, -1) do
         table.insert(res, g.f("{{data}}" .. (i == 1 and "" or ", "), { data = self:get(i) }))
     end
-    table.insert(res, "]")
+    table.insert(res, " ]")
     return table.concat(res)
 end
 
-if debug.getinfo(3) == nil then
+if g.debug_mode() then
     local stack = Stack()
     stack:push(1)
     stack:push(2)
@@ -72,9 +71,6 @@ if debug.getinfo(3) == nil then
     stack:push(4)
     stack:push(5)
     print(stack)
-    stack:pop()
-    print(stack)
-    print(stack:top())
 end
 
 return Stack

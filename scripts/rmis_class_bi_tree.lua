@@ -47,7 +47,7 @@ end
 function BiTree:insert_as_root(data)
     g.assert(self:empty(), "当前树并不为空", 2)
 
-    self._size = 1
+    self._size = self._size + 1
     local node = BiNode(data)
     self._root = node
     return node

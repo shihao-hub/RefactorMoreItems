@@ -4,7 +4,7 @@ local Vector = require("_rmis_class_vector_local")
 
 --local DEFAULT_CAPACITY = 3 -- Lua 表会自动扩容，所以不需要这个默认容量
 
-local SORTED_CATEGORY = { "ASC", "DES" }
+local SORTED_CATEGORY = { ASC = 0, DES = 1 }
 
 Vector.static.__apis__ = {
     "size", -- 元素总数
@@ -83,8 +83,6 @@ end
 ---@overload fun(e:any):boolean
 ---@return number @ -1 代表没找到
 function Vector:find(e, lo, hi)
-    g.untested_error()
-
     lo = lo or 1
     hi = hi or self._size + 1
     for i in g.range(hi - 1, lo - 1, -1) do
@@ -162,7 +160,13 @@ function Vector:insert(r, val)
     end
     self.data[r] = val
     self._size = self._size + 1
-    return self
+end
+
+function Vector:insert_list(...)
+    local args = { n = select("#", ...), ... }
+    for i in g.range(1, g.ro(args.n)) do
+        self:insert(args[i])
+    end
 end
 
 --- TODO: 把 remove_range 整合进来
@@ -282,55 +286,11 @@ if debug.getinfo(3) == nil then
     -- 单元测试太重要了呀...不然每次改动都不能保证改动有没有问题...
 
     local vec = Vector()
-    --vec:put(1, 1)
-    --vec:put(2, 2)
-    --vec:put(3, 3)
-    --vec:put(4, 3)
-    --vec:put(5, 4)
-    --vec:put(6, 4)
-    --vec:put(7, 5)
-    --vec:put(8, 5)
-    --vec:put(9, 5)
-    --vec:put(10, 6)
-    vec:insert(1):insert(2):insert(3):insert(3):insert(3):insert(4):insert(5):insert(6):insert(7):insert(8):insert(9):insert(9):insert(9):insert(10)
-    --print(vec)
-    --for e in g.iter(vec) do
-    --    print(e)
-    --end
-    --print(vec:find(3))
-    print(vec + 1)
-    --print(vec:size())
-    --vec:remove_range(1, 16)
-    --print(vec)
-    --vec:uniquify()
-    --print(vec)
+    vec:insert_list(1, 2, 3, 3, 4, 5, 6, 7, 8, 9, 10)
+    print(vec)
 
-    --print(vec:remove(8))
-    --print(vec)
-    --print(vec:remove_range(2, 4))
-    --print(vec)
+    print(vec:find(10))
 
-
-    --vec:uniquify()
-    --print(vec)
-
-    --vec:remove()
-    --vec:remove(4)
-    --print(vec)
-    --vec:remove(6)
-    --print(vec)
-
-    --print(vec:disordered())
-    --print(vec)
-    --vec:insert(3, 4)
-    --print(vec:disordered())
-    --vec:uniquify()
-    --print(vec)
-    --vec:remove(3)
-    --print(vec:disordered())
-    --vec:remove(1)
-    --print(vec:disordered())
-    --print(vec)
 
 end
 

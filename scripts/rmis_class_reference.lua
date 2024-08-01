@@ -14,4 +14,11 @@ function Reference:set_value(value)
     self.value = value
 end
 
+if g.debug_mode() then
+    local ref = Reference(123)
+    print(ref:get_value())
+    ref:set_value("abc")
+    print(ref:get_value())
+end
+
 return Reference

@@ -40,9 +40,17 @@ function this.print_and_flush(...)
     io.flush()
 end
 
+function this.debug_mode()
+    return debug.getinfo(4) == nil
+end
+
 --- 左闭右开才是合理的
 function this.right_open(right)
     return right + 1
+end
+
+function this.ro(right)
+    return this.right_open(right)
 end
 
 function this.keys(t, filter)

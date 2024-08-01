@@ -2,6 +2,23 @@ local super = require("_rmis_python_builtins")
 local this = super -- 有 Lua 的风格的函数放在这个文件中，虽然目前没感觉到 Lua 风格代码是啥
 
 
+function this.xpcall(f, msgh, arg1, ...)
+    super.not_implemented_error()
+
+    if type(msgh) ~= "function" then
+        error("参数 #2(msgh) 必须是函数类型", 2)
+    end
+    local res = { pcall(f, arg1, ...) }
+    print(super.list_tostring(res))
+    if not res[1] then
+        xpcall(function()
+            error(res[2], 2)
+        end, msgh)
+        error(res[2], 2)
+    end
+    return unpack(res, 2, table.maxn(res))
+end
+
 --- 合并列表，默认会剔除列表中的空值
 function this.merge(...)
     local args = { ... }
@@ -65,6 +82,14 @@ function this.difference(v1, v2)
     return super.keys(map, function(k)
         return map[k] > 0
     end)
+end
+
+---@param name string
+---@param _super Object|nil @ 为空时，默认为 Object
+function this.class(name, _super)
+    local class = require("rmis_middleclass")
+    _super = _super or require("rmis_class_object")
+    return class(name, _super)
 end
 
 if debug.getinfo(3) == nil then

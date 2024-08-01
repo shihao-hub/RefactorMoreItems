@@ -36,7 +36,7 @@ function Queue:front()
 end
 
 function Queue:__tostring()
-    return self:_tostring("<", "<")
+    return self:_tostring("< ", " <")
 end
 
 if debug.getinfo(3) == nil then

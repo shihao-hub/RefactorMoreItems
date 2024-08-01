@@ -1,0 +1,6 @@
+local file = io.open("tests/fd_test_resource.txt")
+assert(file, "文件不存在")
+print(file:read("*line"))
+print(file:seek())
+io.flush()
+io.read()

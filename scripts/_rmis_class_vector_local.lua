@@ -18,7 +18,8 @@ function Vector:_check_non_nil_value(v, msg)
 end
 
 --- [)
----@overload fun(left:number,right:number)
+---@overload fun(r:number)
+---@overload fun(r:number,left:number,right:number)
 function Vector:_check_valid_rank_value(r, msg, left, right)
     if not msg and not left and not right then
         left = 1
